@@ -7,9 +7,7 @@ const authStore = useAuthStore();
 const form = ref({
     first_name: "",
     last_name: "",
-    phone_number: "",
-    country: "",
-    gender: "",
+    phone: "",
     email: "",
     password: "",
     password_confirmation: "",
@@ -99,7 +97,7 @@ const form = ref({
                   type="number"
                   required
                   placeholder="phone number"
-                  v-model="form.phone_number"
+                  v-model="form.phone"
                   class="
                     bordder-[#E9EDF4]
                     w-full
@@ -115,53 +113,15 @@ const form = ref({
                     focus-visible:shadow-none
                   "
                 />
-                <div v-if="authStore.errors.phone_number" class="flex">
+                <div v-if="authStore.errors.phone" class="flex">
                   <span class="text-red-400 text-sm m-2 p-2">{{
-                    authStore.errors.phone_number
+                    authStore.errors.phone
                   }}</span>
                 </div>
               </div>
-              <div class="mb-4 flex">
-      <label for="gender" class="block text-gray-700 font-bold mb-2">Gender:</label>
-      <select id="gender" v-model="form.gender" class="bg-gray-300 text-center ml-4 py-1 px-2 rounded-md">
-        <option value="">Select your gender</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-      </select>
-      <div v-if="authStore.errors.gender" class="flex">
-                  <span class="text-red-400 text-sm m-2 p-2">{{
-                    authStore.errors.gender
-                  }}</span>
-                </div>
-    </div>
-              <div class="mb-6">
-                <input
-                  type="text"
-                  required
-                  placeholder="Country"
-                  v-model="form.country"
-                  class="
-                    bordder-[#E9EDF4]
-                    w-full
-                    rounded-md
-                    border
-                    bg-[#FCFDFE]
-                    py-3
-                    px-5
-                    text-base text-body-color
-                    placeholder-[#ACB6BE]
-                    outline-none
-                    focus:border-primary
-                    focus-visible:shadow-none
-                  "
-                />
-                <div v-if="authStore.errors.country" class="flex">
-                  <span class="text-red-400 text-sm m-2 p-2">{{
-                    authStore.errors.country
-                  }}</span>
-                </div>
-              </div>
+
+         
+
               <div class="mb-6">
                 <input
                   type="email"

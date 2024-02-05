@@ -1,19 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LandingPage from '../components/LandingPage.vue';
-import About from '../components/About.vue';
-import Login from '../components/Login.vue';
-import Register from '../components/Register.vue';
-import ForgotPassword from '../components/Forgot-Password.vue';
-import AccommodationList from '../pages/accomodation/AccommodationList.vue';
-import AccommodationDetails from '../pages/accomodation/AccommodationDetails.vue';
-import BookingForm from '../pages/accomodation/BookingForm.vue';
-import AdminDashboard from '../pages/admin/AdminDashboard.vue';
-import AdminViewBookings from '../pages/admin/AdminViewBookings.vue';
-import AdminViewAgents from '../pages/admin/AdminViewAgents.vue';
-import AdminViewAccommodations from '../pages/admin/AdminViewAccomodations.vue';
-import AdminAddAccommodation from '../pages/admin/AdminAddAccommodation.vue';
-import ViewBookings from '../pages/agent/ViewBookings.vue';
-import ViewBookingById from '../pages/agent/ViewBookingById.vue';
+import LandingPage from './components/LandingPage.vue';
+import About from './components/About.vue';
+import Login from './components/Login.vue';
+import Register from './components/Register.vue';
+import ForgotPassword from './components/Forgot-Password.vue';
+import AccommodationList from './pages/accomodation/AccommodationList.vue';
+import AccommodationDetails from './pages/accomodation/AccommodationDetails.vue';
+import BookingForm from './pages/accomodation/BookingForm.vue';
+import AdminDashboard from './pages/admin/AdminDashboard.vue';
+import AdminViewBookings from './pages/admin/AdminViewBookings.vue';
+import AdminViewAgents from './pages/admin/AdminViewAgents.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,12 +18,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LandingPage
+      component: LandingPage,
+      meta: { requiresAuth: false }
     },
     {
       path: '/about',
       name: 'about',
-      component: About
+      component: About,
+      meta: { requiresAuth: false }
     },
     {
       path: '/login',
@@ -46,11 +45,13 @@ const router = createRouter({
       component: ForgotPassword,
       meta: { requiresAuth: false }
     },
+    
+    //private routes
     {
       path: '/accommodations',
       name: 'accommodationList',
       component: AccommodationList,
-      meta: { requiresAuth: true } // Example of a route that requires authentication
+      meta: { requiresAuth: true }
     },
     {
       path: '/accommodation/:id',
@@ -66,49 +67,24 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/admin/dashboard',
-      name: 'admin-dashboard',
+      path: '/dashboard',
+      name: 'dashboard',
       component: AdminDashboard,
-      meta: { requiresAuth: true }
     },
     {
-      path: '/admin/bookings',
+      path: '/bookings',
       name: 'adminbookings',
       component: AdminViewBookings,
       meta: { requiresAuth: true }
     },
     {
-      path: '/admin/agents',
+      path: '/agents',
       name: 'adminagent',
       component: AdminViewAgents,
       meta: { requiresAuth: true }
     },
-    {
-      path: '/admin/accommodations',
-      name: 'adminaccomodation',
-      component: AdminViewAccommodations,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/admin/add/accommodations',
-      name: 'addadminaccomodation',
-      component: AdminAddAccommodation,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/agent/bookings',
-      name: 'agentaccomodation',
-      component: ViewBookings,
-   
-    },
-    {
-      path: '/admin/accommodations', // This seems to be a duplicate route, please double-check
-      name: 'agentaccomodation',
-      component: ViewBookingById,
-      meta: {
-        requiresAuth: true,
-      },
-    },
+
+
     ]
 });
 

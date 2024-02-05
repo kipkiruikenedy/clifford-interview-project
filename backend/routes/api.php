@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TravelAgentController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AccommodationController;
+use App\Http\Controllers\ContractController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+//public routes
 Route::post('/login', [LoginController::class, 'login']);
-
+Route::post('/register', [TravelAgentController::class, 'store']);
 
 //Routes for accomodations crude operations
 Route::get('/accommodations', [AccommodationController::class, 'index']);
@@ -41,6 +43,5 @@ Route::delete('/contracts/{id}', [ContractController::class, 'destroy']);
 //Routes for user crude operations
 Route::get('/agents', [TravelAgentController::class, 'index']);
 Route::get('/agents/{id}', [TravelAgentController::class, 'show']);
-Route::post('/agents', [TravelAgentController::class, 'store']);
 Route::put('/agents/{id}', [TravelAgentController::class, 'update']);
 Route::delete('/agents/{id}', [TravelAgentController::class, 'destroy']);

@@ -13,6 +13,6 @@ class Contract extends Model
         'start_date',
         'end_date',
         'accommodation_id',  // Foreign key for Accommodation
-        'travel_agent_id',           // Foreign key for User (Travel Agent)
+        'user_id',           // Foreign key for User (Travel Agent)
     ];
 }

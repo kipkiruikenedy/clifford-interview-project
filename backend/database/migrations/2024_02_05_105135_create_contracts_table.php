@@ -17,13 +17,13 @@ return new class extends Migration
                 $table->date('start_date');
                 $table->date('end_date');
                 $table->unsignedBigInteger('accommodation_id');
-                $table->unsignedBigInteger('travel_agent_id');
+                $table->unsignedBigInteger('user_id');
                 $table->timestamps();
         
                                   // Foreign key for Accommodation
                 $table->foreign('accommodation_id')->references('id')->on('accommodations');
                      // Foreign key for Travel Agent
-                $table->foreign('travel_agent_id')->references('id')->on('travel_agents');
+                $table->foreign('user_id')->references('id')->on('users');
         
         });
     }

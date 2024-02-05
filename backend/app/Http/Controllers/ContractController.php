@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Contract;
 
 class ContractController extends Controller
 {
@@ -21,7 +22,7 @@ class ContractController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'contract_rate' => 'required|numeric',
+            'contract_rates' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'accommodation_id' => 'required|exists:accommodations,id',

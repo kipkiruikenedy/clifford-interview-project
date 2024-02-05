@@ -9,7 +9,7 @@ class Contract extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'contract_rate',
+        'contract_rates',
         'start_date',
         'end_date',
         'accommodation_id',  // Foreign key for Accommodation

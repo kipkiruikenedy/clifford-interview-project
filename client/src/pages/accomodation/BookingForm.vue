@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto mt-8 p-4">
     <h2 class="text-3xl font-semibold mb-6">Booking Form</h2>
-    <router-link to="/dashboard" class=" bg-blue-900 rounded p-1 text-white hover:text-blue-700">Go back to dashboard</router-link>
+    <router-link to="/dashboard" class="bg-blue-900 rounded p-1 text-white hover:text-blue-700">Go back to dashboard</router-link>
 
     <!-- Travel Agent Information -->
     <div class="mb-8">
@@ -57,10 +57,21 @@ const disablePastDates = (date) => {
   return date < today;
 };
 
-const submitBooking = () => {
-  // Implement the logic to submit the booking details to the backend
-  console.log('Booking Form submitted:', bookingForm.value);
-  // You can use axios or fetch API to make a POST request to your backend
+const submitBooking = async () => {
+  try {
+    const response = await axios.post('http://localhost:8000/api/contracts', {
+      start_date: bookingForm.value.startDate,
+      end_date: bookingForm.value.endDate,
+      accommodation_id: bookingForm.value.contract,
+      user_id: loggedInAgent.id
+    });
+    console.log('Booking successfully submitted:', response.data);
+    // Optionally, you can perform further actions after successful submission
+    window.location.href = '/admin/accommodations';
+  } catch (error) {
+    console.error('Error submitting booking:', error);
+    // Handle error appropriately, e.g., display an error message to the user
+  }
 };
 
 // Fetch contracts from the backend on component mount
@@ -68,6 +79,7 @@ onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/accommodations');
     contracts.value = response.data;
+
   } catch (error) {
     console.error('Error fetching contracts:', error);
   }
@@ -75,12 +87,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Add your custom styles here */
-/* Example: */
 .container {
   max-width: 600px;
   margin: auto;
 }
-
-/* Add more styles as needed */
 </style>

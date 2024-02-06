@@ -1,4 +1,3 @@
-
 <template>
   <div class="flex">
     <Sidebar />
@@ -11,21 +10,23 @@
           <thead>
             <tr>
               <th class="border border-gray-300 px-4 py-2">ID</th>
-              <th class="border border-gray-300 px-4 py-2">Customer Name</th>
-              <th class="border border-gray-300 px-4 py-2">Accommodation</th>
-              <th class="border border-gray-300 px-4 py-2">Check-in Date</th>
-              <th class="border border-gray-300 px-4 py-2">Check-out Date</th>
+              <th class="border border-gray-300 px-4 py-2">Contract Rates</th>
+              <th class="border border-gray-300 px-4 py-2">Start Date</th>
+              <th class="border border-gray-300 px-4 py-2">End Date</th>
+              <th class="border border-gray-300 px-4 py-2">Accommodation ID</th>
+              <th class="border border-gray-300 px-4 py-2">User ID</th>
               <th class="border border-gray-300 px-4 py-2">Actions</th>
               <!-- Add more headers as needed -->
             </tr>
           </thead>
           <tbody>
-            <tr v-for="booking in bookings" :key="booking.id">
+            <tr v-for="booking in filteredBookings" :key="booking.id">
               <td class="border border-gray-300 px-4 py-2">{{ booking.id }}</td>
-              <td class="border border-gray-300 px-4 py-2">{{ booking.customerName }}</td>
-              <td class="border border-gray-300 px-4 py-2">{{ booking.accommodation }}</td>
-              <td class="border border-gray-300 px-4 py-2">{{ booking.checkinDate }}</td>
-              <td class="border border-gray-300 px-4 py-2">{{ booking.checkoutDate }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ booking.contract_rates }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ booking.start_date }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ booking.end_date }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ booking.accommodation_id }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ booking.user_id }}</td>
               <td class="border border-gray-300 px-4 py-2">
                 <button @click="showMoreInfo(booking.id)" class="text-blue-500">More Info</button>
                 <button @click="editBooking(booking.id)" class="text-yellow-500 ml-2">Edit</button>
@@ -41,10 +42,11 @@
           <div class="bg-white p-8 rounded-md">
             <h2 class="text-2xl font-semibold mb-4">Booking Details</h2>
             <p><strong>ID:</strong> {{ selectedBooking.id }}</p>
-            <p><strong>Customer Name:</strong> {{ selectedBooking.customerName }}</p>
-            <p><strong>Accommodation:</strong> {{ selectedBooking.accommodation }}</p>
-            <p><strong>Check-in Date:</strong> {{ selectedBooking.checkinDate }}</p>
-            <p><strong>Check-out Date:</strong> {{ selectedBooking.checkoutDate }}</p>
+            <p><strong>Contract Rates:</strong> {{ selectedBooking.contract_rates }}</p>
+            <p><strong>Start Date:</strong> {{ selectedBooking.start_date }}</p>
+            <p><strong>End Date:</strong> {{ selectedBooking.end_date }}</p>
+            <p><strong>Accommodation ID:</strong> {{ selectedBooking.accommodation_id }}</p>
+            <p><strong>User ID:</strong> {{ selectedBooking.user_id }}</p>
             <button @click="closeModal" class="mt-4">Close</button>
           </div>
         </div>
@@ -55,6 +57,7 @@
 
 <script>
 import Sidebar from '../Sidebar.vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -62,14 +65,36 @@ export default {
   },
   data() {
     return {
-      bookings: [
-        // Replace with actual booking data or fetch from an API
-        { id: 1, customerName: 'John Doe', accommodation: 'Hotel ABC', checkinDate: '2024-02-01', checkoutDate: '2024-02-05' },
-        { id: 2, customerName: 'Jane Smith', accommodation: 'Resort XYZ', checkinDate: '2024-02-10', checkoutDate: '2024-02-15' },
-        // Add more bookings as needed
-        ],
+      bookings: [],
       selectedBooking: null,
+      loggedInUserId: '', // Store logged-in user's ID
     };
+  },
+  async mounted() {
+    try {
+      const response = await axios.get('http://localhost:8000/api/contracts');
+      this.bookings = response.data;
+
+      // Get logged-in user's ID from local storage
+      this.loggedInUserId = localStorage.getItem('user_id');
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+    }
+  },
+  computed: {
+    filteredBookings() {
+      // Get the user data from local storage
+      const userData = JSON.parse(localStorage.getItem('user'));
+
+      // If the user is an admin, show all bookings
+      if (this.isAdmin()) {
+        return this.bookings;
+      }
+
+      // If the user is not an admin, filter bookings by user ID
+      return this.bookings.filter(booking => booking.user_id === userData.id);
+    }
+    
   },
   methods: {
     showMoreInfo(bookingId) {
@@ -86,6 +111,13 @@ export default {
     closeModal() {
       this.selectedBooking = null;
     },
+    isAdmin() {
+      // Get the user data from local storage
+      const userData = JSON.parse(localStorage.getItem('user'));
+      // Check if the role is 'admin'
+      return userData && userData.role === 'admin';
+    }
+
   },
 };
 </script>

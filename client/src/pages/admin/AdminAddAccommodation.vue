@@ -68,6 +68,7 @@ async function addAccommodation() {
       standard_rack_rate: '',
       image: null,
     };
+    window.location.href = '/admin/accommodations';
   } catch (error) {
     console.error('Error adding accommodation:', error.response.data);
   }

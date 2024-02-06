@@ -1,93 +1,86 @@
 <template>
-  <div class="container mx-auto p-4 min-h-screen">
-    <form @submit.prevent="submitBooking" class="max-w-md mx-auto bg-white p-8 shadow-md rounded-md">
-      <h2 class="text-2xl font-semibold mb-6">Book Accommodation</h2>
+  <div class="container mx-auto mt-8 p-4">
+    <h2 class="text-3xl font-semibold mb-6">Booking Form</h2>
+    <router-link to="/dashboard" class=" bg-blue-900 rounded p-1 text-white hover:text-blue-700">Go back to dashboard</router-link>
 
-      <div class="mb-4">
-        <label for="travelAgent" class="block text-sm font-medium text-gray-700">Travel Agent:</label>
-        <select v-model="selectedTravelAgent" @change="fetchContractRates" class="mt-1 p-2 border rounded-md w-full">
-          <option v-for="agent in travelAgents" :key="agent.id" :value="agent.id">{{ agent.name }}</option>
-        </select>
+    <!-- Travel Agent Information -->
+    <div class="mb-8">
+      <label class="block text-sm font-medium text-gray-700">Travel Agent:</label>
+      <div class="mt-2">
+        <span class="block font-semibold">{{ loggedInAgent.first_name }} {{ loggedInAgent.last_name }}</span>
+        <span class="block">{{ loggedInAgent.email }}</span>
       </div>
+    </div>
 
-      <div class="mb-4">
-        <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date:</label>
-        <vue3-datepicker v-model="startDate" class="mt-1 p-2 border rounded-md w-full" :disabled-dates="disablePastDates"></vue3-datepicker>
-      </div>
+    <!-- Booking Details -->
+    <div class="mb-6">
+      <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date:</label>
+      <vue3-datepicker v-model="bookingForm.startDate" class="mt-1 p-2 border rounded-md w-full" :disabled-dates="disablePastDates"></vue3-datepicker>
+    </div>
 
-      <div class="mb-6">
-        <label for="endDate" class="block text-sm font-medium text-gray-700">End Date:</label>
-        <vue3-datepicker v-model="endDate" class="mt-1 p-2 border rounded-md w-full" :disabled-dates="disablePastDates"></vue3-datepicker>
-      </div>
+    <div class="mb-6">
+      <label for="endDate" class="block text-sm font-medium text-gray-700">End Date:</label>
+      <vue3-datepicker v-model="bookingForm.endDate" class="mt-1 p-2 border rounded-md w-full" :disabled-dates="disablePastDates"></vue3-datepicker>
+    </div>
 
-      <!-- Add other form fields as needed -->
+    <!-- Contract Selection -->
+    <div class="mb-6">
+      <label for="contract" class="block text-sm font-medium text-gray-700">Select Contract:</label>
+      <select v-model="bookingForm.contract" id="contract" name="contract" class="mt-1 p-2 border rounded-md w-full" required>
+        <!-- Populate the options dynamically based on available contracts -->
+        <option v-for="contract in contracts" :key="contract.id" :value="contract.id">{{ contract.name }}</option>
+      </select>
+    </div>
 
-      <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Submit Booking</button>
-    </form>
+    <!-- Submit Button -->
+    <button @click="submitBooking" class="px-4 py-2 bg-blue-500 text-white rounded-md">Submit Booking</button>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
 import Vue3Datepicker from 'vue3-datepicker';
+import axios from 'axios';
 
-const selectedTravelAgent = ref(null);
-const startDate = ref(null);
-const endDate = ref(null);
-const travelAgents = ref([]); // Fetch this from your Laravel backend
+const bookingForm = ref({
+  startDate: '',
+  endDate: '',
+  contract: null,
+});
 
-// Function to disable past dates
+const loggedInAgent = JSON.parse(localStorage.getItem('user'));
+
+const contracts = ref([]);
+
 const disablePastDates = (date) => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
   return date < today;
 };
 
-// Fetch contract rates when the selected travel agent changes
-const fetchContractRates = async () => {
-  if (selectedTravelAgent.value) {
-    try {
-      // Fetch and display contract rates based on the selected travel agent
-      const response = await axios.get(`/api/contract-rates/${selectedTravelAgent.value}`);
-      // Handle the response and update your component state accordingly
-    } catch (error) {
-      console.error('Error fetching contract rates:', error.response.data);
-    }
-  }
+const submitBooking = () => {
+  // Implement the logic to submit the booking details to the backend
+  console.log('Booking Form submitted:', bookingForm.value);
+  // You can use axios or fetch API to make a POST request to your backend
 };
 
-// Submit booking details to the backend
-const submitBooking = async () => {
+// Fetch contracts from the backend on component mount
+onMounted(async () => {
   try {
-    // Validate form fields before submitting (add validation logic as needed)
-    if (!selectedTravelAgent.value || !startDate.value || !endDate.value) {
-      console.error('Please fill in all required fields.');
-      return;
-    }
-
-    // Implement the logic to submit the booking details to your Laravel backend
-    const response = await axios.post('/api/bookings', {
-      travel_agent_id: selectedTravelAgent.value,
-      start_date: startDate.value,
-      end_date: endDate.value,
-      // Add other form fields as needed
-    });
-
-    // Handle the response from the backend
-    console.log('Booking submitted successfully:', response.data);
-
-    // Reset form fields after submission
-    selectedTravelAgent.value = null;
-    startDate.value = null;
-    endDate.value = null;
-    // Reset other form fields as needed
+    const response = await axios.get('http://localhost:8000/api/accommodations');
+    contracts.value = response.data;
   } catch (error) {
-    console.error('Error submitting booking:', error.response.data);
+    console.error('Error fetching contracts:', error);
   }
-};
+});
 </script>
 
 <style scoped>
-/* Add your custom styles if needed */
+/* Add your custom styles here */
+/* Example: */
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+/* Add more styles as needed */
 </style>

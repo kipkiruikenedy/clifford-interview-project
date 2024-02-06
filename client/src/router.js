@@ -10,6 +10,9 @@ import BookingForm from './pages/accomodation/BookingForm.vue';
 import AdminDashboard from './pages/admin/AdminDashboard.vue';
 import AdminViewBookings from './pages/admin/AdminViewBookings.vue';
 import AdminViewAgents from './pages/admin/AdminViewAgents.vue';
+import AdminViewAccomodations from './pages/admin/AdminViewAccomodations.vue';
+import AdminAddAccommodation from './pages/admin/AdminAddAccommodation.vue';
+import Profile from './pages/Profile.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,15 +50,29 @@ const router = createRouter({
 
     // Private routes
     {
+      path: '/admin/accommodations',
+      name: 'AdminViewAccomodations',
+      component: AdminViewAccomodations,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/add/accommodations',
+      name: 'AdminAddAccomodations',
+      component: AdminAddAccommodation,
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/accommodations',
       name: 'accommodationList',
       component: AccommodationList,
+      meta: { requiresAuth: true }
     },
     {
       path: '/accommodation/:id',
       name: 'accommodationDetails',
       component: AccommodationDetails,
       props: true,
+      meta: { requiresAuth: true }
 
     },
     {
@@ -80,6 +97,12 @@ const router = createRouter({
       path: '/agents',
       name: 'agents',
       component: AdminViewAgents,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
       meta: { requiresAuth: true }
     },
   ]

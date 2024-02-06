@@ -4,7 +4,7 @@
     <Sidebar />
     <div class="flex-1 p-4">
       <h1 class="text-3xl font-semibold mb-4">Accommodations</h1>
-      <router-link to="/admin/add/accommodations" class="bg-green-600 p-1 rounded m-2">Add new Accomodation</router-link>
+      <router-link to="/add/accommodations" class="bg-green-600 p-1 rounded m-2">Add new Accomodation</router-link>
       <div v-if="accommodations.length === 0" class="text-gray-600">No accommodations available.</div>
       <div v-else>
         <!-- Display accommodations in a table -->
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Sidebar from '../Sidebar.vue';
 
 export default {
@@ -46,15 +47,22 @@ export default {
   },
   data() {
     return {
-      accommodations: [
-        // Replace with actual accommodation data or fetch from an API
-        { id: 1, name: 'Hotel ABC', description: 'Luxurious hotel with great amenities.' },
-        { id: 2, name: 'Resort XYZ', description: 'Seaside resort with stunning views.' },
-        // Add more accommodations as needed
-        ],
+      accommodations: [],
     };
   },
+  mounted() {
+    // Fetch accommodations from the API when the component is mounted
+    this.fetchAccommodations();
+  },
   methods: {
+    async fetchAccommodations() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/accommodations');
+        this.accommodations = response.data;
+      } catch (error) {
+        console.error('Error fetching accommodations:', error);
+      }
+    },
     viewDetails(accommodationId) {
       // Implement logic to view details of the accommodation with the given ID
       console.log('View Details for Accommodation ID:', accommodationId);
@@ -70,6 +78,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Add your Tailwind CSS styles here */

@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 
 class TravelAgentController extends Controller
 {
+  
     public function index()
     {
-        $users = User::all();
+        // Fetch only travel agents based on their role
+        $users = User::where('role', 'travel_agent')->get();
+    
         return response()->json($users, 200);
     }
-
     public function show($id)
     {
         $user = User::findOrFail($id);
